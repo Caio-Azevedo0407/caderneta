@@ -1,0 +1,619 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Caderneta</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#14532d">
+<link rel="icon" href="icon-192.png">
+<style>
+:root{--bg:#f3f5f2;--card:#fff;--tx:#1c241e;--mut:#64706a;--bd:#d6ddd8;--pri:#166534;--pri-tx:#fff;--ok:#15803d;--bad:#b91c1c;--warn:#b45309;--soft:#e8f3ec}
+@media (prefers-color-scheme:dark){:root{--bg:#111613;--card:#1a211c;--tx:#e5ebe7;--mut:#94a39a;--bd:#2b352f;--pri:#22c55e;--pri-tx:#06240f;--soft:#17271c;--ok:#4ade80;--bad:#f87171;--warn:#fbbf24}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.45 system-ui,"Segoe UI",Roboto,sans-serif}
+header{position:sticky;top:0;z-index:5;background:var(--card);border-bottom:1px solid var(--bd);padding:10px 16px}
+header h1{margin:0;font-size:17px}
+header .sub{color:var(--mut);font-size:13px}
+nav{display:flex;gap:4px;margin-top:8px;overflow-x:auto}
+nav button{flex:1;white-space:nowrap;padding:8px 6px;font-size:14px}
+main{max-width:820px;margin:0 auto;padding:14px 16px 96px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px;margin-bottom:12px}
+label{display:block;font-size:13px;color:var(--mut);margin:10px 0 3px}
+input[type=text],input[type=password],input[type=date],select,textarea{width:100%;padding:9px 10px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);font:inherit}
+textarea{min-height:70px;resize:vertical}
+button{font:inherit;padding:9px 12px;border-radius:8px;border:1px solid var(--bd);background:var(--card);color:var(--tx);cursor:pointer}
+button.pri{background:var(--pri);border-color:var(--pri);color:var(--pri-tx)}
+button.on{background:var(--soft);border-color:var(--pri);color:var(--pri);font-weight:600}
+button.del{color:var(--bad)}
+button.mini{padding:4px 10px;font-size:14px}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;align-items:center}
+.nota{color:var(--mut);font-size:13px}
+h2{font-size:15px;margin:18px 0 8px}
+h3{font-size:15px;margin:0 0 4px}
+.hide{display:none!important}
+.empty{text-align:center;color:var(--mut);padding:20px 10px}
+.falar{text-align:center}
+.mic{display:block;margin:6px auto 10px;width:104px;height:104px;border-radius:50%;font-size:44px;background:var(--pri);color:var(--pri-tx);border:0;box-shadow:0 4px 14px rgba(0,0,0,.2)}
+.miclbl{font-weight:600;font-size:17px;margin-bottom:4px}
+.it{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:9px 10px;margin-bottom:7px;display:flex;gap:9px;align-items:flex-start}
+.it.feito{opacity:.55}
+.it.feito .tx{text-decoration:line-through}
+.it input[type=checkbox]{width:20px;height:20px;margin-top:2px;flex:none}
+.it .tx{flex:1}
+.it .meta{color:var(--mut);font-size:13px}
+.badge{display:inline-block;font-size:12px;padding:1px 8px;border-radius:999px;border:1px solid var(--bd);color:var(--mut);margin-right:4px}
+.b-criar{border-color:var(--ok);color:var(--ok)}
+.b-mover{border-color:var(--pri);color:var(--pri)}
+.b-atualizar{border-color:var(--warn);color:var(--warn)}
+.b-comentar{border-color:var(--mut)}
+.antes{color:var(--mut);font-size:13px}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:20;display:flex;align-items:flex-end;justify-content:center}
+.ovbox{background:var(--card);width:100%;max-width:560px;border-radius:16px 16px 0 0;padding:18px 16px 24px;text-align:center}
+#ovTit{font-size:20px;font-weight:700}
+#ovTxt{min-height:110px;max-height:40vh;overflow:auto;font-size:17px;padding:10px;border:1px dashed var(--bd);border-radius:8px;margin:10px 0;text-align:left}
+.ovt{font-variant-numeric:tabular-nums;color:var(--mut);margin:6px 0}
+.ovbox .acts button{flex:1;padding:15px;font-size:17px}
+.busy{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:30;display:flex;align-items:center;justify-content:center;padding:16px}
+.busy>div{background:var(--card);border-radius:14px;padding:22px 18px;max-width:360px;text-align:center;font-size:17px;white-space:pre-line}
+.giro{width:38px;height:38px;border:4px solid var(--bd);border-top-color:var(--pri);border-radius:50%;margin:0 auto 12px;animation:giro 1s linear infinite}
+@keyframes giro{to{transform:rotate(360deg)}}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:#111827;color:#fff;padding:8px 14px;border-radius:8px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:40}
+.toast.show{opacity:1}
+.aviso{border-left:4px solid var(--warn)}
+#ctlTxt,#ctlAnt{min-height:220px;font:14px/1.45 ui-monospace,Consolas,monospace}
+</style>
+</head>
+<body>
+<header>
+  <h1>Caderneta · Ch SecProj</h1>
+  <div class="sub" id="cab"></div>
+  <nav>
+    <button id="tF" class="on">🎤 Falar</button>
+    <button id="tD">Caderneta</button>
+    <button id="tK">Kanban</button>
+    <button id="tA">Controle</button>
+    <button id="tC">Ajustes</button>
+  </nav>
+</header>
+
+<main>
+  <!-- FALAR -->
+  <section id="vF">
+    <div class="card aviso">
+      <div class="nota"><b>Só conteúdo ostensivo.</b> Nada sigiloso, nada de saúde ou dado pessoal sensível. Projeto sensível: use a designação externa.</div>
+    </div>
+    <div class="card falar">
+      <button id="mic" class="mic" aria-label="Gravar">🎤</button>
+      <div class="miclbl">Toque para gravar</div>
+      <div class="nota">Fale solto: “Sgt Fulano, terminar o ARQ do PNR até sexta.” · “Decidi que o SPDA fica para a fase 2.” · “DOM pediu a planilha do FM-18.”</div>
+      <details style="text-align:left;margin-top:10px"><summary class="nota">Prefere escrever?</summary>
+        <textarea id="notaTxt" placeholder="Escreva a nota…"></textarea>
+        <div class="acts"><button id="notaAdd">Salvar nota</button></div>
+      </details>
+    </div>
+    <h2>Notas novas <span class="nota" id="notaCont"></span></h2>
+    <div class="acts" style="margin-top:0">
+      <button class="pri" id="btnIA">✨ Organizar com IA</button>
+      <button class="mini hide" id="btnDesf">↩ Desfazer</button>
+    </div>
+    <div id="iaRes" class="card hide" style="margin-top:10px"></div>
+    <div id="notas" style="margin-top:10px"></div>
+  </section>
+
+  <!-- CADERNETA -->
+  <section id="vD" class="hide">
+    <div class="acts" style="margin-top:0">
+      <label class="nota" style="margin:0"><input type="checkbox" id="mostrarFeitos"> mostrar concluídos</label>
+      <span style="flex:1"></span>
+      <button class="mini" id="copDec">Copiar decisões</button>
+    </div>
+    <div id="cad"></div>
+  </section>
+
+  <!-- KANBAN -->
+  <section id="vK" class="hide">
+    <div class="card">
+      <h3>Propostas para o Kanban do Sistema</h3>
+      <p class="nota">A IA <b>propõe</b>; nada muda no Sistema sozinho. Você exporta o lote e, no Sistema, aprova item por item (essa tela do Sistema é a próxima etapa).</p>
+      <div class="acts">
+        <button class="pri" id="expLote">⬇ Exportar lote</button>
+        <button class="mini" id="limparK">Limpar exportadas</button>
+      </div>
+    </div>
+    <div id="props"></div>
+  </section>
+
+  <!-- CONTROLE -->
+  <section id="vA" class="hide">
+    <div class="card">
+      <h3>CONTROLE DE ATIVIDADES – SUBS PROJ</h3>
+      <p class="nota">A IA parte da última versão enviada e muda só o que a caderneta e o Kanban indicam, na sua voz.</p>
+      <details id="antBox"><summary class="nota">Última versão enviada (cole uma vez; depois o app guarda)</summary>
+        <textarea id="ctlAnt" placeholder="CONTROLE DE ATIVIDADES – SUBS PROJ&#10;Atualizado em DD/MM&#10;Prioridade: …"></textarea>
+      </details>
+      <label>Prioridade da semana (opcional)</label>
+      <input type="text" id="ctlPri" placeholder="Ex.: PNR e FM-18">
+      <div class="acts"><button class="pri" id="btnCtl">✨ Atualizar com IA</button></div>
+    </div>
+    <textarea id="ctlTxt" placeholder="A mensagem aparece aqui. Você pode editar antes de enviar."></textarea>
+    <div class="acts">
+      <button class="pri" id="ctlCopiar">Copiar</button>
+      <button id="ctlEnviar">Enviar (WhatsApp…)</button>
+      <button id="ctlFixar">Marcar como enviada</button>
+    </div>
+    <p class="nota" id="ctlInfo"></p>
+  </section>
+
+  <!-- AJUSTES -->
+  <section id="vC" class="hide">
+    <div class="card">
+      <h3>Retrato do Sistema SecProj</h3>
+      <p class="nota">Equipe, projetos e cartões abertos, para a IA reconhecer quem é quem. Use o arquivo JSON do retrato (o mesmo que o cofre lê, com projetos sensíveis pela designação externa).</p>
+      <div class="acts">
+        <button class="pri" id="retBtn">📂 Carregar retrato (JSON)</button>
+        <input type="file" id="retF" accept=".json,application/json" class="hide">
+      </div>
+      <p class="nota" id="retInfo"></p>
+    </div>
+    <div class="card">
+      <h3>Inteligência artificial (Claude Opus 5.5)</h3>
+      <p class="nota">Chave da API (organização com os créditos do seu plano). Fica só neste celular, fora da cópia de segurança.</p>
+      <input type="password" id="chave" placeholder="sk-ant-..." autocomplete="off">
+      <div class="acts">
+        <button id="chaveSalvar" class="pri">Salvar chave</button>
+        <button id="chaveTestar">Testar</button>
+        <button id="chaveApagar" class="del">Apagar chave</button>
+      </div>
+      <p class="nota" id="chaveInfo"></p>
+      <p class="nota" id="gastoInfo"></p>
+    </div>
+    <div class="card">
+      <h3>Cópia de segurança</h3>
+      <div class="acts">
+        <button id="exp">Exportar cópia</button>
+        <button id="imp">Importar cópia</button>
+        <input type="file" id="impF" accept=".json,application/json" class="hide">
+        <button class="del" id="zerar">Apagar tudo</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Segurança da informação</h3>
+      <p class="nota">Os dados ficam só neste celular. Ao gravar, a fala passa pelo serviço de voz do Google; ao usar “✨ IA”, as notas, a caderneta e o retrato vão para a Anthropic (Claude). Use só conteúdo ostensivo.</p>
+      <p class="nota">Versão 1 · 23/11/2026</p>
+    </div>
+  </section>
+</main>
+
+<div id="ov" class="ov hide" role="dialog" aria-modal="true">
+  <div class="ovbox">
+    <div id="ovTit">🔴 Gravando…</div>
+    <div id="ovTxt"></div>
+    <div class="ovt" id="ovTempo">0:00</div>
+    <div class="acts">
+      <button class="del" id="ovCancel">Cancelar</button>
+      <button class="pri" id="ovOk">■ Parar e salvar</button>
+    </div>
+  </div>
+</div>
+<div id="busy" class="busy hide"><div><div class="giro"></div><div id="busyTxt">Aguarde…</div></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const KEY = 'caderneta-v1', CHAVE_KEY = 'caderneta-chave';
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+const iso = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+const hojeISO = () => iso(new Date());
+const ddmm = s => s ? s.slice(8, 10) + '/' + s.slice(5, 7) : '';
+const hora = () => { const d = new Date(); return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); };
+const cap = t => t.charAt(0).toUpperCase() + t.slice(1);
+
+const TIPOS = {
+  tarefa: ['Tarefas da equipe', '📌'], decisao: ['Decisões', '⚖️'], pendencia: ['Pendências externas', '⏳'],
+  lembrete: ['Lembretes', '🔔'], licao: ['Lições aprendidas', '💡']
+};
+const STATUS = { a_fazer: 'A fazer', andamento: 'Em andamento', avaliacao: 'Em avaliação', concluido: 'Concluído' };
+const PRIOR = { baixa: 'Baixa', media: 'Média', alta: 'Alta' };
+
+// ---------- estado ----------
+function novoEstado() { return { retrato: null, notas: [], itens: [], propostas: [], controle: { anterior: '', atual: '', em: '' }, gastoIA: 0 }; }
+function carregar() {
+  try { const s = JSON.parse(localStorage.getItem(KEY)); if (s && Array.isArray(s.notas)) return Object.assign(novoEstado(), s); } catch (e) {}
+  return novoEstado();
+}
+let S = carregar(), tSave;
+function salvar() {
+  clearTimeout(tSave);
+  tSave = setTimeout(() => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { toast('Não consegui salvar neste navegador'); } }, 250);
+  cabecalho();
+}
+function toast(m) { const t = $('toast'); t.textContent = m; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 1900); }
+function ocupado(t) { $('busyTxt').textContent = t; $('busy').classList.remove('hide'); }
+function livre() { $('busy').classList.add('hide'); }
+
+function cabecalho() {
+  const novas = S.notas.filter(n => !n.ok).length, abertos = S.itens.filter(i => !i.feito).length, props = S.propostas.filter(p => p.estado === 'nova').length;
+  $('cab').textContent = novas + ' nota(s) nova(s) · ' + abertos + ' item(ns) aberto(s) · ' + props + ' proposta(s) p/ o Kanban';
+}
+
+// ---------- retrato do Sistema ----------
+const nomeExib = p => [p.posto, p.nome].filter(Boolean).join(' ');
+function retratoResumo() {
+  const r = S.retrato; if (!r) return null;
+  return {
+    gerado_em: r.gerado_em,
+    equipe: (r.equipe || []).map(p => ({ nome: nomeExib(p), formacao: p.formacao, funcao: p.funcao, chefia: !!p.chefia,
+      afastamentos: (p.afastamentos || []).map(a => a.tipo + ' ' + ddmm(a.inicio) + '–' + ddmm(a.fim)) })),
+    projetos_na_fila: (r.fila || []).map(f => ({ ordem: f.ordem, projeto: f.projeto, fase_atual: f.fase_atual })),
+    cartoes_abertos: (r.tarefas_abertas || []).map(t => ({ projeto: t.projeto || 'Seção', codigo: t.codigo, titulo: t.titulo,
+      responsavel: t.responsavel, situacao: t.situacao, prazo: t.prazo, prioridade: t.prioridade, impedimento: t.impedimento }))
+  };
+}
+function acharCartao(projeto, codigo) {
+  const r = S.retrato; if (!r || !codigo) return null;
+  return (r.tarefas_abertas || []).find(t => t.codigo === codigo && ((t.projeto || 'Seção') === (projeto || 'Seção'))) || null;
+}
+function mostrarRetrato() {
+  const r = S.retrato;
+  $('retInfo').textContent = r ? 'Retrato de ' + (r.gerado_em || '?').replace('T', ' ').slice(0, 16) + ': ' + (r.equipe || []).length + ' integrantes, ' +
+    (r.tarefas_abertas || []).length + ' cartões abertos, ' + (r.fila || []).length + ' projetos na fila.' : 'Nenhum retrato carregado: a IA vai trabalhar só com o que você falar.';
+}
+$('retBtn').onclick = () => $('retF').click();
+$('retF').onchange = e => {
+  const f = e.target.files[0]; if (!f) return;
+  f.text().then(t => {
+    try {
+      const r = JSON.parse(t);
+      if (!Array.isArray(r.equipe) || !Array.isArray(r.tarefas_abertas)) throw 0;
+      S.retrato = r; salvar(); mostrarRetrato(); toast('Retrato carregado');
+    } catch (err) { alert('Esse arquivo não é o retrato do Sistema (precisa ter "equipe" e "tarefas_abertas").'); }
+  });
+  e.target.value = '';
+};
+
+// ---------- notas ----------
+function addNota(t) {
+  S.notas.push({ id: uid(), d: hojeISO(), h: hora(), t: cap(t.trim()), ok: false });
+  salvar(); renderNotas(); toast('Nota salva');
+}
+$('notaAdd').onclick = () => { const t = $('notaTxt').value.trim(); if (!t) return; addNota(t); $('notaTxt').value = ''; };
+function renderNotas() {
+  const novas = S.notas.filter(n => !n.ok);
+  $('notaCont').textContent = '(' + novas.length + ')';
+  $('notas').innerHTML = novas.length ? novas.slice().reverse().map(n => `
+    <div class="it" data-nid="${n.id}">
+      <div class="tx"><div class="meta">${ddmm(n.d)} ${n.h}</div><textarea data-nt="1" style="min-height:54px">${esc(n.t)}</textarea></div>
+      <button class="mini del" data-nrm="1">✕</button>
+    </div>`).join('') : '<div class="empty">Nenhuma nota nova. Toque no microfone e fale.</div>';
+  cabecalho();
+}
+const notaDe = el => { const d = el.closest('[data-nid]'); return d ? S.notas.find(n => n.id === d.dataset.nid) : null; };
+$('notas').addEventListener('input', e => { const n = notaDe(e.target); if (n && e.target.dataset.nt) { n.t = e.target.value; salvar(); } });
+$('notas').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return; const n = notaDe(b);
+  if (n && b.dataset.nrm && confirm('Apagar esta nota?')) { S.notas = S.notas.filter(x => x !== n); salvar(); renderNotas(); }
+});
+
+// ---------- gravação ----------
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+let rec = null, gravando = false, cancelado = false, finalizado = false, falaF = '', falaP = '', t0 = 0, tick = null;
+function abrirGravacao() {
+  $('ovOk').classList.remove('hide'); $('ovCancel').textContent = 'Cancelar'; $('ov').classList.remove('hide');
+  if (!SR) { ovErro('Este navegador não grava voz. Abra a Caderneta pelo Google Chrome.'); return; }
+  falaF = ''; falaP = ''; cancelado = false; finalizado = false; gravando = true;
+  $('ovTit').textContent = '🔴 Gravando…'; $('ovTxt').textContent = 'Pode falar…';
+  t0 = Date.now(); $('ovTempo').textContent = '0:00'; clearInterval(tick);
+  tick = setInterval(() => { const s = Math.floor((Date.now() - t0) / 1000); $('ovTempo').textContent = Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); }, 500);
+  try { ligarRec(); } catch (e) { ovErro('Não consegui ligar o microfone.'); }
+}
+function ovErro(m) { gravando = false; clearInterval(tick); $('ovTit').textContent = 'Não deu para gravar'; $('ovTxt').textContent = m; $('ovOk').classList.add('hide'); $('ovCancel').textContent = 'Fechar'; }
+function fecharOv() { $('ov').classList.add('hide'); clearInterval(tick); }
+function ligarRec() {
+  rec = new SR(); rec.lang = 'pt-BR'; rec.continuous = false; rec.interimResults = true;
+  rec.onresult = e => {
+    falaP = '';
+    for (let i = e.resultIndex; i < e.results.length; i++) { const t = e.results[i][0].transcript.trim(); if (e.results[i].isFinal) falaF += (falaF ? ' ' : '') + t; else falaP += t; }
+    const t = (falaF + ' ' + falaP).trim(); if (t) { $('ovTxt').textContent = t; $('ovTxt').scrollTop = 1e6; }
+  };
+  rec.onerror = e => {
+    if (e.error === 'not-allowed' || e.error === 'service-not-allowed') ovErro('O microfone está bloqueado. No Chrome: cadeado ao lado do endereço → Permissões → Microfone → Permitir.');
+    else if (e.error === 'network') ovErro('Sem internet para transformar a fala em texto. Use “Prefere escrever?”.');
+    else if (e.error === 'audio-capture') ovErro('Não encontrei microfone neste aparelho.');
+  };
+  rec.onend = () => { if (gravando) { try { ligarRec(); } catch (err) { gravando = false; terminar(); } } else terminar(); };
+  rec.start();
+}
+function terminar() {
+  if (finalizado || $('ovOk').classList.contains('hide')) return;
+  finalizado = true; const t = (falaF + ' ' + falaP).trim(); falaF = ''; falaP = ''; fecharOv();
+  if (cancelado) return; if (!t) { toast('Não ouvi nada'); return; } addNota(t);
+}
+$('ovOk').onclick = () => { gravando = false; $('ovTit').textContent = 'Salvando…'; try { rec.stop(); } catch (e) {} setTimeout(terminar, 2000); };
+$('ovCancel').onclick = () => { cancelado = true; if (gravando) { gravando = false; try { rec.abort(); } catch (e) {} } finalizado = true; fecharOv(); };
+$('mic').onclick = abrirGravacao;
+
+// ---------- IA ----------
+const SDK_URL = 'https://cdn.jsdelivr.net/npm/@anthropic-ai/sdk@1.7.0/+esm';
+const MODELO = 'claude-opus-5-5';
+const lerChave = () => { try { return localStorage.getItem(CHAVE_KEY) || ''; } catch (e) { return ''; } };
+let SDK = null, cli = null, cliChave = '';
+async function cliente() {
+  const k = lerChave(); if (!k) throw new Error('Configure a chave da IA em Ajustes.');
+  if (!SDK) { try { SDK = await import(SDK_URL); } catch (e) { throw new Error('Sem internet para ligar a IA agora.'); } }
+  const Anthropic = SDK.default || SDK.Anthropic;
+  if (!cli || cliChave !== k) { cli = new Anthropic({ apiKey: k, dangerouslyAllowBrowser: true }); cliChave = k; }
+  return { c: cli, Anthropic };
+}
+function registrarGasto(u) {
+  if (!u) return;
+  S.gastoIA = (S.gastoIA || 0) + ((u.input_tokens || 0) * 4 + (u.cache_creation_input_tokens || 0) * 5 + (u.cache_read_input_tokens || 0) * 0.2 + (u.output_tokens || 0) * 20) / 1e6;
+  salvar(); mostrarGasto();
+}
+function mostrarGasto() {
+  $('gastoInfo').textContent = 'Gasto estimado com IA neste celular: US$ ' + (S.gastoIA || 0).toFixed(2);
+  const k = lerChave(); $('chaveInfo').textContent = k ? 'Chave salva: ' + k.slice(0, 14) + '… (' + k.length + ' caracteres)' : 'Nenhuma chave salva.';
+}
+async function chamarIA({ system, user, schema, maxTokens = 32000 }) {
+  const { c, Anthropic } = await cliente();
+  const base = { model: MODELO, max_tokens: maxTokens, system, messages: [{ role: 'user', content: user }], output_config: { effort: 'medium' } };
+  if (schema) base.output_config.format = { type: 'json_schema', schema };
+  let msg;
+  try {
+    try { msg = await c.beta.messages.stream({ ...base, betas: ['server-side-fallback-2026-07-01'], fallbacks: 'default' }).finalMessage(); }
+    catch (e) { if (e instanceof Anthropic.BadRequestError && /fallback/i.test(e.message || '')) msg = await c.messages.stream(base).finalMessage(); else throw e; }
+  } catch (e) {
+    if (e instanceof Anthropic.AuthenticationError) throw new Error('A chave não foi aceita pela Anthropic. Detalhe: ' + (e.message || ''));
+    if (e instanceof Anthropic.PermissionDeniedError) throw new Error('A chave não tem permissão para o Claude Opus 5.5.');
+    if (e instanceof Anthropic.RateLimitError) throw new Error('Muitos pedidos seguidos. Espere um minuto.');
+    if (e instanceof Anthropic.BadRequestError) throw new Error(/credit|balance/i.test(e.message || '') ? 'Acabaram os créditos da API.' : 'A IA não aceitou o pedido: ' + e.message);
+    if (e instanceof Anthropic.APIConnectionError) throw new Error('Sem internet para falar com a IA.');
+    if (e instanceof Anthropic.APIError) throw new Error('Erro da IA (' + e.status + '). Tente de novo.');
+    throw e;
+  }
+  registrarGasto(msg.usage);
+  if (msg.stop_reason === 'refusal') throw new Error('A IA recusou este pedido.');
+  if (msg.stop_reason === 'max_tokens') throw new Error('A resposta ficou grande demais. Organize as notas em partes.');
+  let bl = msg.content; const fi = bl.map(b => b.type).lastIndexOf('fallback'); if (fi >= 0) bl = bl.slice(fi + 1);
+  const txt = bl.filter(b => b.type === 'text').map(b => b.text).join('').trim();
+  if (!schema) return txt;
+  try { return JSON.parse(txt); } catch (e) { throw new Error('A IA respondeu num formato inesperado. Tente de novo.'); }
+}
+
+const CONTEXTO = `Você apoia o Chefe da Seção de Projetos (SecProj) de uma Comissão Regional de Obras do Exército. A seção elabora projetos de engenharia (arquitetura, estrutura, instalações, orçamento, documentação técnica) e se relaciona com a DOM, o Grupamento de Engenharia, a CJU e as OM atendidas. A equipe é chamada por posto e nome de guerra (ex.: "Sgt Fulano", "Ten Beltrana"). Todo o conteúdo é ostensivo.`;
+
+const SYS_ORG = `${CONTEXTO}
+
+Ao longo do dia o chefe grava notas de voz (transcrição automática, pode ter erros em nomes, siglas e números). Sua tarefa: transformar as NOTAS NOVAS em itens da caderneta e em propostas para o Kanban do Sistema SecProj.
+
+ITENS (tipo):
+- tarefa: algo que um integrante da equipe deve fazer (pessoa, projeto, prazo se dito).
+- decisao: algo que o chefe decidiu. Escreva a decisão de forma objetiva, como registro.
+- pendencia: algo que depende de fora da seção (DOM, Gpt E, CJU, OM, fornecedor).
+- lembrete: algo para o próprio chefe lembrar ou fazer.
+- licao: lição aprendida para os próximos projetos.
+Uma nota pode gerar vários itens. Texto curto e direto, sem floreio.
+
+PROPOSTAS PARA O KANBAN (só quando a nota indicar trabalho de integrante que deve estar num cartão):
+- criar: cartão novo (codigo ""), com titulo curto ("Projeto – atividade" fica no campo projeto + titulo), responsavel (nome exatamente como na equipe do retrato), prazo se dito.
+- atualizar: muda prazo, prioridade, responsável, impedimento ou descrição de um cartão que JÁ EXISTE no retrato (use projeto e codigo do retrato).
+- mover: muda a situação de um cartão existente (a_fazer, andamento, avaliacao, concluido).
+- comentar: registra um recado num cartão existente.
+Regras: nunca invente cartão existente; se não achar o cartão no retrato, proponha "criar" e diga no motivo. Campos que não mudam ficam "" (ou status "" / prioridade ""). Prazo no formato AAAA-MM-DD; datas relativas ("sexta", "dia 3") convertem a partir da data de hoje informada. "motivo" explica em uma frase, citando o que ele disse.
+Nomes de pessoas: use exatamente o nome da equipe do retrato quando reconhecer; se não houver retrato, escreva como ele falou.
+Nota que você não entender vai em nao_entendidas com o motivo. Não chute.`;
+
+const SCHEMA_ORG = {
+  type: 'object', additionalProperties: false, required: ['itens', 'propostas_kanban', 'nao_entendidas'],
+  properties: {
+    itens: { type: 'array', items: { type: 'object', additionalProperties: false, required: ['tipo', 'texto', 'pessoa', 'projeto', 'prazo', 'notas'],
+      properties: { tipo: { type: 'string', enum: ['tarefa', 'decisao', 'pendencia', 'lembrete', 'licao'] }, texto: { type: 'string' },
+        pessoa: { type: 'string' }, projeto: { type: 'string' }, prazo: { type: 'string' }, notas: { type: 'array', items: { type: 'string' } } } } },
+    propostas_kanban: { type: 'array', items: { type: 'object', additionalProperties: false,
+      required: ['acao', 'projeto', 'codigo', 'titulo', 'responsavel', 'prazo', 'prioridade', 'status', 'impedimento', 'comentario', 'motivo', 'notas'],
+      properties: { acao: { type: 'string', enum: ['criar', 'atualizar', 'mover', 'comentar'] }, projeto: { type: 'string' }, codigo: { type: 'string' },
+        titulo: { type: 'string' }, responsavel: { type: 'string' }, prazo: { type: 'string' },
+        prioridade: { type: 'string', enum: ['', 'baixa', 'media', 'alta'] }, status: { type: 'string', enum: ['', 'a_fazer', 'andamento', 'avaliacao', 'concluido'] },
+        impedimento: { type: 'string' }, comentario: { type: 'string' }, motivo: { type: 'string' }, notas: { type: 'array', items: { type: 'string' } } } } },
+    nao_entendidas: { type: 'array', items: { type: 'object', additionalProperties: false, required: ['nota_id', 'motivo'],
+      properties: { nota_id: { type: 'string' }, motivo: { type: 'string' } } } }
+  }
+};
+
+let backupIA = null;
+$('btnIA').onclick = async () => {
+  const notas = S.notas.filter(n => !n.ok && n.t.trim());
+  if (!notas.length) { toast('Nenhuma nota nova'); return; }
+  if (!lerChave()) { alert('Cole a chave da API em Ajustes → Inteligência artificial.'); aba('C'); return; }
+  ocupado('✨ A IA está organizando ' + notas.length + ' nota(s)…\nPode levar até um minuto.');
+  try {
+    const user = 'Hoje: ' + hojeISO() + ' (' + ['domingo', 'segunda', 'terça', 'quarta', 'quinta', 'sexta', 'sábado'][new Date().getDay()] + ')\n\n' +
+      'RETRATO DO SISTEMA (JSON):\n' + JSON.stringify(retratoResumo() || 'sem retrato carregado') +
+      '\n\nITENS ABERTOS DA CADERNETA (para não duplicar):\n' + JSON.stringify(S.itens.filter(i => !i.feito).map(i => ({ tipo: i.tipo, texto: i.texto, pessoa: i.pessoa, projeto: i.projeto }))) +
+      '\n\nNOTAS NOVAS (JSON):\n' + JSON.stringify(notas.map(n => ({ nota_id: n.id, data: n.d, hora: n.h, texto: n.t })));
+    const r = await chamarIA({ system: SYS_ORG, user, schema: SCHEMA_ORG });
+    backupIA = JSON.stringify(S);
+    const usadas = new Set();
+    (r.itens || []).forEach(i => { S.itens.push({ id: uid(), tipo: i.tipo, texto: i.texto.trim(), pessoa: i.pessoa.trim(), projeto: i.projeto.trim(), prazo: i.prazo.trim(), data: hojeISO(), feito: false }); i.notas.forEach(x => usadas.add(x)); });
+    (r.propostas_kanban || []).forEach(p => { S.propostas.push(Object.assign({ id: uid(), estado: 'nova', data: hojeISO() }, p)); p.notas.forEach(x => usadas.add(x)); });
+    const duvidas = (r.nao_entendidas || []).map(x => { const n = S.notas.find(y => y.id === x.nota_id); return n ? n.h + ' – ' + x.motivo : null; }).filter(Boolean);
+    const duvIds = new Set((r.nao_entendidas || []).map(x => x.nota_id));
+    notas.forEach(n => { if (!duvIds.has(n.id)) n.ok = true; });
+    salvar(); renderNotas();
+    const cont = t => (r.itens || []).filter(i => i.tipo === t).length;
+    $('iaRes').innerHTML = '<h3>✨ Organizado</h3><div class="nota">' +
+      Object.keys(TIPOS).map(t => cont(t) ? TIPOS[t][1] + ' ' + cont(t) + ' ' + TIPOS[t][0].toLowerCase() : '').filter(Boolean).join(' · ') +
+      ((r.propostas_kanban || []).length ? '<br>🗂 ' + r.propostas_kanban.length + ' proposta(s) para o Kanban' : '') + '</div>' +
+      (duvidas.length ? '<div class="nota" style="margin-top:6px">Não entendi (a nota continua aqui para você corrigir e organizar de novo):</div><ul>' + duvidas.map(x => '<li>' + esc(x) + '</li>').join('') + '</ul>' : '');
+    $('iaRes').classList.remove('hide'); $('btnDesf').classList.remove('hide');
+  } catch (e) { alert(e.message || String(e)); }
+  finally { livre(); }
+};
+$('btnDesf').onclick = () => {
+  if (!backupIA || !confirm('Desfazer a última organização?')) return;
+  const g = S.gastoIA; S = Object.assign(novoEstado(), JSON.parse(backupIA)); S.gastoIA = g; backupIA = null;
+  salvar(); renderNotas(); $('iaRes').classList.add('hide'); $('btnDesf').classList.add('hide'); toast('Desfeito');
+};
+
+// ---------- caderneta ----------
+function renderCad() {
+  const ver = $('mostrarFeitos').checked;
+  let html = '';
+  for (const [t, [nome, ic]] of Object.entries(TIPOS)) {
+    const its = S.itens.filter(i => i.tipo === t && (ver || !i.feito));
+    if (!its.length) continue;
+    html += `<h2>${ic} ${nome} <span class="nota">(${its.length})</span></h2>`;
+    html += its.slice().reverse().map(i => `
+      <div class="it ${i.feito ? 'feito' : ''}" data-iid="${i.id}">
+        <input type="checkbox" data-ifeito="1" ${i.feito ? 'checked' : ''} title="Concluído">
+        <div class="tx"><div>${esc(i.texto)}</div>
+          <div class="meta">${[i.pessoa, i.projeto, i.prazo ? 'até ' + ddmm(i.prazo) : '', 'anotado ' + ddmm(i.data)].filter(Boolean).map(esc).join(' · ')}</div></div>
+        <button class="mini del" data-irm="1">✕</button>
+      </div>`).join('');
+  }
+  $('cad').innerHTML = html || '<div class="empty">A caderneta está vazia. Grave notas e toque em “Organizar com IA”.</div>';
+}
+$('mostrarFeitos').onchange = renderCad;
+$('cad').addEventListener('click', e => {
+  const d = e.target.closest('[data-iid]'); if (!d) return; const i = S.itens.find(x => x.id === d.dataset.iid); if (!i) return;
+  if (e.target.dataset.ifeito) { i.feito = e.target.checked; salvar(); renderCad(); }
+  else if (e.target.closest('[data-irm]') && confirm('Apagar este item?')) { S.itens = S.itens.filter(x => x !== i); salvar(); renderCad(); }
+});
+$('copDec').onclick = async () => {
+  const dec = S.itens.filter(i => i.tipo === 'decisao').map(i => '- ' + ddmm(i.data) + ': ' + i.texto + (i.projeto ? ' (' + i.projeto + ')' : ''));
+  if (!dec.length) { toast('Nenhuma decisão registrada'); return; }
+  try { await navigator.clipboard.writeText('Decisões do Ch SecProj\n' + dec.join('\n')); toast('Decisões copiadas'); } catch (e) { alert(dec.join('\n')); }
+};
+
+// ---------- propostas para o Kanban ----------
+function descrProposta(p) {
+  const m = [];
+  if (p.titulo) m.push('título: ' + p.titulo);
+  if (p.responsavel) m.push('responsável: ' + p.responsavel);
+  if (p.prazo) m.push('prazo: ' + ddmm(p.prazo));
+  if (p.prioridade) m.push('prioridade: ' + PRIOR[p.prioridade]);
+  if (p.status) m.push('→ ' + STATUS[p.status]);
+  if (p.impedimento) m.push('impedimento: ' + p.impedimento);
+  if (p.comentario) m.push('comentário: “' + p.comentario + '”');
+  return m.join(' · ');
+}
+function renderProps() {
+  const ps = S.propostas.filter(p => p.estado !== 'descartada');
+  $('props').innerHTML = ps.length ? ps.slice().reverse().map(p => {
+    const c = acharCartao(p.projeto, p.codigo);
+    const antes = c ? `<div class="antes">Hoje no Sistema: ${esc(c.situacao)} · ${esc(c.responsavel || 'sem responsável')}${c.prazo ? ' · prazo ' + ddmm(c.prazo) : ''}</div>` : (p.acao !== 'criar' ? '<div class="antes">⚠ Cartão não encontrado no retrato carregado</div>' : '');
+    return `<div class="it" data-pid="${p.id}" style="${p.estado === 'exportada' ? 'opacity:.6' : ''}">
+      <div class="tx">
+        <div><span class="badge b-${p.acao}">${p.acao}</span><b>${esc(p.projeto || 'Seção')}</b>${p.codigo ? ' · #' + esc(p.codigo) : ''}${p.estado === 'exportada' ? ' <span class="badge">exportada</span>' : ''}</div>
+        <div>${esc(descrProposta(p))}</div>${antes}
+        <div class="meta">${esc(p.motivo)}</div>
+      </div>
+      ${p.estado === 'nova' ? '<button class="mini del" data-pdesc="1">Descartar</button>' : ''}
+    </div>`;
+  }).join('') : '<div class="empty">Nenhuma proposta. Elas aparecem quando você fala de trabalho da equipe e organiza com a IA.</div>';
+}
+$('props').addEventListener('click', e => {
+  const d = e.target.closest('[data-pid]'); if (!d || !e.target.closest('[data-pdesc]')) return;
+  const p = S.propostas.find(x => x.id === d.dataset.pid); if (p) { p.estado = 'descartada'; salvar(); renderProps(); }
+});
+$('expLote').onclick = async () => {
+  const ps = S.propostas.filter(p => p.estado === 'nova');
+  if (!ps.length) { toast('Nenhuma proposta nova'); return; }
+  const lote = { formato: 'caderneta-lote-1', gerado_em: new Date().toISOString(), origem: 'Caderneta do Ch SecProj', retrato_de: S.retrato ? S.retrato.gerado_em : null,
+    propostas: ps.map(p => ({ id: p.id, acao: p.acao, projeto: p.projeto, codigo: p.codigo, titulo: p.titulo, responsavel: p.responsavel, prazo: p.prazo,
+      prioridade: p.prioridade, status: p.status, impedimento: p.impedimento, comentario: p.comentario, motivo: p.motivo, data: p.data })) };
+  const nome = 'caderneta-lote-' + hojeISO() + '.json';
+  const blob = new Blob([JSON.stringify(lote, null, 2)], { type: 'application/json' });
+  const arq = new File([blob], nome, { type: 'application/json' });
+  let ok = false;
+  if (navigator.canShare && navigator.canShare({ files: [arq] })) { try { await navigator.share({ files: [arq], title: nome }); ok = true; } catch (e) {} }
+  if (!ok) { const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = nome; a.click(); ok = true; }
+  ps.forEach(p => p.estado = 'exportada'); salvar(); renderProps(); toast(ps.length + ' proposta(s) exportada(s)');
+};
+$('limparK').onclick = () => { S.propostas = S.propostas.filter(p => p.estado === 'nova'); salvar(); renderProps(); };
+
+// ---------- controle de atividades ----------
+const SYS_CTL = `${CONTEXTO}
+
+Você atualiza a mensagem "CONTROLE DE ATIVIDADES – SUBS PROJ" que o chefe manda, numa única mensagem, ao grupo de WhatsApp da equipe.
+Estrutura obrigatória:
+- 1ª linha: CONTROLE DE ATIVIDADES – SUBS PROJ
+- "Atualizado em DD/MM" (data de hoje)
+- "Prioridade: ..." (a informada; se não houver, mantenha a da versão anterior)
+- blocos por cargo, nesta ordem: ARQUITETAS, ENG CIVIS, ENG ELETRICISTAS, TÉCNICOS
+- cada integrante como "▪️ Posto Nome", com "(férias)" ou o afastamento quando for o caso
+- missões numeradas "1) Projeto – atividade", com observações curtas entre parênteses (prazo, apoio)
+Regras:
+- Parta da VERSÃO ANTERIOR e mude só o que as fontes indicam (tarefas novas, concluídas, mudanças de prazo/responsável, afastamentos). Mantenha a redação do chefe no resto.
+- Primeira pessoa do singular, na voz do chefe; nunca "nós", "vamos", "fizemos". Tom de determinação: o integrante executa, o chefe confere.
+- Não exponha dado pessoal sensível (saúde etc.).
+- Sem versão anterior, monte do zero a partir do retrato (cartões abertos por responsável) e da caderneta.
+- Responda só com o texto da mensagem, pronto para colar.`;
+$('btnCtl').onclick = async () => {
+  if (!lerChave()) { alert('Cole a chave da API em Ajustes → Inteligência artificial.'); aba('C'); return; }
+  S.controle.anterior = $('ctlAnt').value; salvar();
+  ocupado('✨ A IA está atualizando o Controle de Atividades…');
+  try {
+    const user = 'Hoje: ' + hojeISO() + '\nPrioridade informada: ' + ($('ctlPri').value.trim() || '(manter)') +
+      '\n\nVERSÃO ANTERIOR:\n' + (S.controle.anterior.trim() || '(não há)') +
+      '\n\nRETRATO DO SISTEMA (JSON):\n' + JSON.stringify(retratoResumo() || 'sem retrato') +
+      '\n\nTAREFAS ABERTAS DA CADERNETA:\n' + JSON.stringify(S.itens.filter(i => i.tipo === 'tarefa' && !i.feito).map(i => ({ texto: i.texto, pessoa: i.pessoa, projeto: i.projeto, prazo: i.prazo }))) +
+      '\n\nPROPOSTAS DE KANBAN AINDA NÃO APLICADAS:\n' + JSON.stringify(S.propostas.filter(p => p.estado !== 'descartada').map(p => ({ acao: p.acao, projeto: p.projeto, codigo: p.codigo, titulo: p.titulo, responsavel: p.responsavel, prazo: p.prazo, status: p.status })));
+    const t = await chamarIA({ system: SYS_CTL, user, maxTokens: 16000 });
+    $('ctlTxt').value = t; S.controle.atual = t; salvar(); toast('Mensagem pronta: confira antes de enviar');
+  } catch (e) { alert(e.message || String(e)); }
+  finally { livre(); }
+};
+$('ctlTxt').addEventListener('input', () => { S.controle.atual = $('ctlTxt').value; salvar(); });
+$('ctlAnt').addEventListener('input', () => { S.controle.anterior = $('ctlAnt').value; salvar(); });
+$('ctlCopiar').onclick = async () => { try { await navigator.clipboard.writeText($('ctlTxt').value); toast('Copiado'); } catch (e) { $('ctlTxt').select(); document.execCommand('copy'); } };
+$('ctlEnviar').onclick = async () => { const t = $('ctlTxt').value; if (navigator.share) { try { await navigator.share({ text: t }); } catch (e) {} } else { try { await navigator.clipboard.writeText(t); } catch (e) {} toast('Copiado: cole no WhatsApp'); } };
+$('ctlFixar').onclick = () => {
+  if (!$('ctlTxt').value.trim()) return;
+  S.controle.anterior = $('ctlTxt').value; S.controle.em = hojeISO(); $('ctlAnt').value = S.controle.anterior; salvar(); mostrarCtl(); toast('Guardada como última versão enviada');
+};
+function mostrarCtl() {
+  $('ctlAnt').value = S.controle.anterior || ''; $('ctlTxt').value = S.controle.atual || '';
+  $('ctlInfo').textContent = S.controle.em ? 'Última versão enviada em ' + ddmm(S.controle.em) + '.' : 'Nenhuma versão marcada como enviada ainda.';
+  if (!S.controle.anterior) $('antBox').open = true;
+}
+
+// ---------- ajustes ----------
+$('chaveSalvar').onclick = () => {
+  const k = $('chave').value.replace(/\s+/g, '').replace(/^["'`*]+|["'`*.,;]+$/g, '');
+  if (!/^sk-ant-/.test(k)) { alert('A chave da Anthropic começa com “sk-ant-”.'); return; }
+  try { localStorage.setItem(CHAVE_KEY, k); } catch (e) {}
+  $('chave').value = ''; cli = null; mostrarGasto(); toast('Chave salva neste celular');
+};
+$('chaveApagar').onclick = () => { if (confirm('Apagar a chave deste celular?')) { try { localStorage.removeItem(CHAVE_KEY); } catch (e) {} cli = null; mostrarGasto(); } };
+$('chaveTestar').onclick = async () => {
+  ocupado('Testando a chave…');
+  try { const t = await chamarIA({ system: 'Responda só com a palavra OK.', user: 'Teste.', maxTokens: 2000 }); alert('Chave funcionando ✔ (' + t.slice(0, 20) + ')'); }
+  catch (e) { alert(e.message || String(e)); } finally { livre(); }
+};
+$('exp').onclick = () => {
+  const b = new Blob([JSON.stringify(S, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'caderneta-' + hojeISO() + '.json'; a.click();
+};
+$('imp').onclick = () => $('impF').click();
+$('impF').onchange = e => {
+  const f = e.target.files[0]; if (!f) return;
+  f.text().then(t => { try { const s = JSON.parse(t); if (!Array.isArray(s.notas)) throw 0; if (confirm('Substituir os dados atuais pela cópia?')) { S = Object.assign(novoEstado(), s); salvar(); tudo(); toast('Cópia importada'); } } catch (err) { alert('Arquivo inválido'); } });
+  e.target.value = '';
+};
+$('zerar').onclick = () => { if (confirm('Apagar notas, caderneta e propostas deste celular?')) { S = novoEstado(); salvar(); tudo(); } };
+
+// ---------- abas ----------
+function aba(x) {
+  ['F', 'D', 'K', 'A', 'C'].forEach(k => { $('v' + k).classList.toggle('hide', k !== x); $('t' + k).classList.toggle('on', k === x); });
+  if (x === 'F') renderNotas(); if (x === 'D') renderCad(); if (x === 'K') renderProps(); if (x === 'A') mostrarCtl(); if (x === 'C') { mostrarRetrato(); mostrarGasto(); }
+  window.scrollTo(0, 0);
+}
+['F', 'D', 'K', 'A', 'C'].forEach(k => $('t' + k).onclick = () => aba(k));
+function tudo() { renderNotas(); renderCad(); renderProps(); mostrarCtl(); mostrarRetrato(); mostrarGasto(); cabecalho(); }
+tudo();
+if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js');
+</script>
+</body>
+</html>
