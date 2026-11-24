@@ -111,7 +111,7 @@ details summary{cursor:pointer}
     </div>
     <div class="card falar">
       <button id="mic" class="mic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>Gravar nota</button>
-            <div class="nota">Fale solto, por exemplo: “Sgt Fulano, terminar o ARQ do PNR até sexta.” · “Decidi que o SPDA fica para a fase 2.” · “DOM pediu a planilha orçamentária do quartel X.”</div>
+            <div class="nota">Fale solto. Por exemplo:<br>“Sgt Fulano, terminar o ARQ do PNR até sexta.”<br>“Decidi que o SPDA fica para a fase 2.”<br>“DOM pediu a planilha orçamentária do quartel X.”</div>
       <details style="text-align:left;margin-top:10px"><summary class="nota">Prefere escrever?</summary>
         <textarea id="notaTxt" placeholder="Escreva a nota…"></textarea>
         <div class="acts"><button id="notaAdd">Salvar nota</button></div>
@@ -205,7 +205,7 @@ details summary{cursor:pointer}
     <div class="card">
       <h3>Segurança da informação</h3>
       <p class="nota">Os dados ficam só neste celular. Ao gravar, a fala passa pelo serviço de voz do Google; ao usar a IA, as notas, a caderneta e o retrato vão para a Anthropic (Claude). Use só conteúdo ostensivo.</p>
-      <p class="nota">Versão 2, de 23/11/2026</p>
+      <p class="nota">Versão 3, de 23/11/2026</p>
     </div>
   </section>
 </main>
@@ -242,6 +242,10 @@ const TIPOS = {
 const STATUS = { a_fazer: 'A fazer', andamento: 'Em andamento', avaliacao: 'Em avaliação', concluido: 'Concluído' };
 const PRIOR = { baixa: 'Baixa', media: 'Média', alta: 'Alta' };
 const ACOES = { criar: "Criar cartão", atualizar: "Atualizar", mover: "Mover", comentar: "Comentar" };
+// singular e plural de cada tipo, para escrever "1 decisão" e "2 decisões" (sem "decisão(ões)")
+const TIPOS_PL = { tarefa: ['tarefa da equipe', 'tarefas da equipe'], decisao: ['decisão', 'decisões'], pendencia: ['pendência externa', 'pendências externas'],
+  lembrete: ['lembrete', 'lembretes'], licao: ['lição aprendida', 'lições aprendidas'] };
+const pl = (n, um, varios) => n + ' ' + (n === 1 ? um : varios);
 
 // ---------- estado ----------
 function novoEstado() { return { retrato: null, notas: [], itens: [], propostas: [], controle: { anterior: '', atual: '', em: '' }, gastoIA: 0 }; }
@@ -261,7 +265,7 @@ function livre() { $('busy').classList.add('hide'); }
 
 function cabecalho() {
   const novas = S.notas.filter(n => !n.ok).length, abertos = S.itens.filter(i => !i.feito).length, props = S.propostas.filter(p => p.estado === 'nova').length;
-  $('cab').textContent = novas + ' nota(s) nova(s) · ' + abertos + ' item(ns) aberto(s) · ' + props + ' proposta(s) p/ o Kanban';
+  $("cab").textContent = [pl(novas, "nota nova", "notas novas"), pl(abertos, "item aberto", "itens abertos"), pl(props, "proposta para o Kanban", "propostas para o Kanban")].join(", ");
 }
 
 // ---------- retrato do Sistema ----------
@@ -452,7 +456,7 @@ $('btnIA').onclick = async () => {
   const notas = S.notas.filter(n => !n.ok && n.t.trim());
   if (!notas.length) { toast('Nenhuma nota nova'); return; }
   if (!lerChave()) { alert('Cole a chave da API em Ajustes → Inteligência artificial.'); aba('C'); return; }
-  ocupado('A IA está organizando ' + notas.length + ' nota(s)…\nPode levar até um minuto.');
+  ocupado("A IA está organizando " + pl(notas.length, "nota", "notas") + "…\nPode levar até um minuto.");
   try {
     const user = 'Hoje: ' + hojeISO() + ' (' + ['domingo', 'segunda', 'terça', 'quarta', 'quinta', 'sexta', 'sábado'][new Date().getDay()] + ')\n\n' +
       'RETRATO DO SISTEMA (JSON):\n' + JSON.stringify(retratoResumo() || 'sem retrato carregado') +
@@ -468,9 +472,9 @@ $('btnIA').onclick = async () => {
     notas.forEach(n => { if (!duvIds.has(n.id)) n.ok = true; });
     salvar(); renderNotas();
     const cont = t => (r.itens || []).filter(i => i.tipo === t).length;
-    $('iaRes').innerHTML = '<h3>Organizado</h3><div class="nota">' +
-      Object.keys(TIPOS).map(t => cont(t) ? cont(t) + ' ' + TIPOS[t][0].toLowerCase() : '').filter(Boolean).join(' · ') +
-      ((r.propostas_kanban || []).length ? "<br>" + r.propostas_kanban.length + ' proposta(s) para o Kanban' : '') + '</div>' +
+    const linhas = Object.keys(TIPOS).filter(t => cont(t)).map(t => pl(cont(t), ...TIPOS_PL[t]));
+    if ((r.propostas_kanban || []).length) linhas.push(pl(r.propostas_kanban.length, 'proposta para o Kanban', 'propostas para o Kanban'));
+    $('iaRes').innerHTML = '<h3>Organizado</h3>' + (linhas.length ? '<ul class="nota">' + linhas.map(x => '<li>' + esc(x) + '</li>').join('') + '</ul>' : '<div class="nota">Nada novo para registrar.</div>') +
       (duvidas.length ? '<div class="nota" style="margin-top:6px">Não entendi (a nota continua aqui para você corrigir e organizar de novo):</div><ul>' + duvidas.map(x => '<li>' + esc(x) + '</li>').join('') + '</ul>' : '');
     $('iaRes').classList.remove('hide'); $('btnDesf').classList.remove('hide');
   } catch (e) { alert(e.message || String(e)); }
@@ -494,7 +498,7 @@ function renderCad() {
       <div class="it ${i.feito ? 'feito' : ''}" data-iid="${i.id}">
         <input type="checkbox" data-ifeito="1" ${i.feito ? 'checked' : ''} title="Concluído">
         <div class="tx"><div>${esc(i.texto)}</div>
-          <div class="meta">${[i.pessoa, i.projeto, i.prazo ? 'até ' + ddmm(i.prazo) : '', 'anotado ' + ddmm(i.data)].filter(Boolean).map(esc).join(' · ')}</div></div>
+          <div class="meta">${esc([i.pessoa, i.projeto, i.prazo ? "prazo " + ddmm(i.prazo) : ""].filter(Boolean).join(", "))}${(i.pessoa || i.projeto || i.prazo) ? ". " : ""}Anotado em ${ddmm(i.data)}.</div></div>
         <button class="mini del" data-irm="1">Apagar</button>
       </div>`).join('');
   }
@@ -515,20 +519,21 @@ $('copDec').onclick = async () => {
 // ---------- propostas para o Kanban ----------
 function descrProposta(p) {
   const m = [];
-  if (p.titulo) m.push('título: ' + p.titulo);
-  if (p.responsavel) m.push('responsável: ' + p.responsavel);
-  if (p.prazo) m.push('prazo: ' + ddmm(p.prazo));
-  if (p.prioridade) m.push('prioridade: ' + PRIOR[p.prioridade]);
-  if (p.status) m.push('→ ' + STATUS[p.status]);
+  if (p.status) m.push('vai para ' + STATUS[p.status]);
+  if (p.titulo) m.push('título ' + p.titulo);
+  if (p.responsavel) m.push('responsável ' + p.responsavel);
+  if (p.prazo) m.push('prazo ' + ddmm(p.prazo));
+  if (p.prioridade) m.push('prioridade ' + PRIOR[p.prioridade].toLowerCase());
   if (p.impedimento) m.push('impedimento: ' + p.impedimento);
-  if (p.comentario) m.push('comentário: “' + p.comentario + '”');
-  return m.join(' · ');
+  if (p.comentario) m.push('comentário “' + p.comentario + '”');
+  const t = m.join('; ');
+  return t ? t.charAt(0).toUpperCase() + t.slice(1) + '.' : '';
 }
 function renderProps() {
   const ps = S.propostas.filter(p => p.estado !== 'descartada');
   $('props').innerHTML = ps.length ? ps.slice().reverse().map(p => {
     const c = acharCartao(p.projeto, p.codigo);
-    const antes = c ? `<div class="antes">Hoje no Sistema: ${esc(c.situacao)} · ${esc(c.responsavel || 'sem responsável')}${c.prazo ? ' · prazo ' + ddmm(c.prazo) : ''}</div>` : (p.acao !== 'criar' ? '<div class="antes">Cartão não encontrado no retrato carregado</div>' : '');
+    const antes = c ? `<div class="antes">Hoje no Sistema: ${esc(c.situacao)}, ${c.responsavel ? "com " + esc(c.responsavel) : "sem responsável"}${c.prazo ? ", prazo " + ddmm(c.prazo) : ""}.</div>` : (p.acao !== 'criar' ? '<div class="antes">Cartão não encontrado no retrato carregado</div>' : '');
     return `<div class="it" data-pid="${p.id}" style="${p.estado === 'exportada' ? 'opacity:.6' : ''}">
       <div class="tx">
         <div><span class="badge b-${p.acao}">${ACOES[p.acao] || p.acao}</span><b>${esc(p.projeto || 'Seção')}</b>${p.codigo ? "<span class=\"pj-cod\">" + esc(p.codigo) + "</span>" : ""}${p.estado === 'exportada' ? ' <span class="badge">exportada</span>' : ''}</div>
@@ -555,7 +560,7 @@ $('expLote').onclick = async () => {
   let ok = false;
   if (navigator.canShare && navigator.canShare({ files: [arq] })) { try { await navigator.share({ files: [arq], title: nome }); ok = true; } catch (e) {} }
   if (!ok) { const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = nome; a.click(); ok = true; }
-  ps.forEach(p => p.estado = 'exportada'); salvar(); renderProps(); toast(ps.length + ' proposta(s) exportada(s)');
+  ps.forEach(p => p.estado = 'exportada'); salvar(); renderProps(); toast(pl(ps.length, "proposta exportada", "propostas exportadas"));
 };
 $('limparK').onclick = () => { S.propostas = S.propostas.filter(p => p.estado === 'nova'); salvar(); renderProps(); };
 

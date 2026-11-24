@@ -1,5 +1,5 @@
 // Guarda o app no celular para abrir sem internet. Os dados ficam no localStorage, não neste cache.
-const CACHE = 'caderneta-v2';
+const CACHE = 'caderneta-v3';
 const ARQS = ['./', 'index.html', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(ARQS))); self.skipWaiting(); });
 self.addEventListener('activate', e => {
