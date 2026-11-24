@@ -5,85 +5,97 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Caderneta</title>
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#0f1b2d">
+<meta name="theme-color" content="#2C5680">
 <link rel="icon" href="icon-192.png">
 <style>
-/* Identidade visual do Sistema Sec Tec CRO/9 (core/static/core/sig.css) */
+/* Visual CRO/9 do Sistema Sec Tec (kit-sistema core/static/core/sig.css, v2026.11.09): azul-aço com a faixa do brasão,
+   Bahnschrift nos títulos, cantos 4/6 px, sem degradê, sem sombra de enfeite, sem emoji como ícone */
 :root{
-  --ink:#1b2430; --mute:#64707f; --line:#e1e6ec; --bg:#f4f6f9; --card:#fff; --soft:#f6f8fb;
-  --side:#0f1b2d; --side2:#16263d; --sidetx:#c3cede; --acc:#2563eb; --acc2:#1d4ed8;
-  --ok:#16a34a; --warn:#d97706; --bad:#dc2626; --bim:#7c3aed;
-  --r:12px; --sh:0 1px 2px rgba(16,24,40,.06),0 1px 3px rgba(16,24,40,.08);
+  --ink:#1A2533; --ink2:#36475A; --mute:#536477; --mute2:#8B99A9;
+  --line:#D9E1EA; --line2:#E4EAF0; --line3:#C2CEDB; --campo:#8592A1;
+  --bg:#F2F5F9; --card:#fff; --soft:#F7F9FC; --soft2:#EBF0F5;
+  --side:#2C5680; --side2:#35638F; --sidetx:#E6EEF6; --sidegrp:#BACCDF; --sidelin:#3C6893;
+  --acc:#1D63A6; --acc2:#164E85; --acc-l:#E0EBF6; --acc-l2:#EFF5FB; --acc-b:#A7C4E2;
+  --ouro:#E3B31B; --verm:#C8262D; --celeste:#4FB3DD;
+  --sideon:#fff; --sideativo:rgba(255,255,255,.09); --sidemarca:var(--ouro);
+  --ok:#16a34a; --warn:#d97706; --bad:#dc2626;
+  --r:6px; --r-p:4px; --sh-flut:0 10px 30px rgba(29,35,39,.16);
+  --f-tit:Bahnschrift,"Segoe UI",Roboto,Arial,sans-serif;
   /* nomes usados no código da Caderneta */
   --tx:var(--ink); --mut:var(--mute); --bd:var(--line); --pri:var(--acc); --pri-tx:#fff;
+  accent-color:var(--acc);
 }
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 "Segoe UI",Inter,Roboto,Arial,sans-serif}
-header{position:sticky;top:0;z-index:5;background:var(--side);color:var(--sidetx);padding:12px 16px 10px;box-shadow:0 2px 8px rgba(15,27,45,.25)}
-.marca{display:flex;gap:12px;align-items:center}
-.marca .logo{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#2563eb,#7c3aed);display:grid;place-items:center;color:#fff;font-weight:800;font-size:15px;flex:none}
-header h1{margin:0;font-size:16px;font-weight:600;color:#fff}
-header .sub{color:#93a1b5;font-size:12px}
-nav{display:flex;gap:4px;margin-top:10px;overflow-x:auto}
-nav button{flex:1;white-space:nowrap;padding:8px 8px;font-size:13.5px;background:none;border:0;color:var(--sidetx);border-radius:8px}
-nav button:hover{background:var(--side2);color:#fff}
-nav button.on{background:var(--acc);color:#fff;font-weight:600}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 "Segoe UI",system-ui,Roboto,Arial,sans-serif}
+header{position:sticky;top:0;z-index:5;background:var(--side);color:var(--sidetx)}
+header::before{content:"";display:block;height:7px;background:linear-gradient(var(--verm) 0 2px,var(--ouro) 2px 4px,var(--celeste) 4px 7px)}
+.marca{padding:10px 16px 0}
+header h1{margin:0;font:600 17px/1.25 var(--f-tit);color:var(--sideon)}
+header .sub{color:var(--sidegrp);font-size:12.5px;margin-top:2px;font-variant-numeric:tabular-nums}
+nav{display:flex;gap:2px;margin-top:8px;padding:0 10px;overflow-x:auto;border-top:1px solid var(--sidelin)}
+nav button{flex:1;white-space:nowrap;padding:10px 8px;font-size:14px;background:none;border:0;border-radius:0;color:var(--sidetx);font-weight:500}
+nav button:hover{background:var(--side2);color:var(--sideon)}
+nav button.on{background:var(--sideativo);color:var(--sideon);box-shadow:inset 0 -3px 0 var(--sidemarca);font-weight:600}
 main{max-width:860px;margin:0 auto;padding:16px 16px 96px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:14px;box-shadow:var(--sh)}
-label{display:block;font-size:12.5px;color:var(--mute);margin:10px 0 4px;font-weight:600}
-input[type=text],input[type=password],input[type=date],select,textarea{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--ink);font:inherit;font-size:14.5px}
-input:focus,textarea:focus,select:focus{outline:2px solid #bfdbfe;border-color:var(--acc)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:14px}
+label{display:block;font-size:13px;color:var(--ink2);margin:10px 0 4px;font-weight:600}
+input[type=text],input[type=password],input[type=date],select,textarea{width:100%;padding:9px 10px;border:1px solid var(--campo);border-radius:var(--r-p);background:#fff;color:var(--ink);font:inherit;font-size:14.5px}
+input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
 textarea{min-height:70px;resize:vertical}
-button{font:inherit;font-size:14px;font-weight:500;padding:9px 14px;border-radius:9px;border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer}
+button{font:inherit;font-size:14px;font-weight:500;padding:9px 14px;border-radius:var(--r-p);border:1px solid var(--line3);background:#fff;color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;gap:7px}
 button:hover{background:var(--soft)}
-button.pri{background:var(--acc);border-color:var(--acc);color:#fff}
-button.pri:hover{background:var(--acc2)}
+button.pri{background:var(--acc);border-color:var(--acc);color:#fff;font-weight:600}
+button.pri:hover{background:var(--acc2);border-color:var(--acc2)}
 button.del{color:var(--bad);border-color:#fecaca}
 button.mini{padding:5px 11px;font-size:13px}
+button svg{width:18px;height:18px;flex:none}
 .acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;align-items:center}
 .nota{color:var(--mute);font-size:13px}
-h2{font-size:15px;margin:20px 0 10px;font-weight:600}
-h3{font-size:15px;margin:0 0 6px;font-weight:600}
+h2{font:600 15px/1.3 var(--f-tit);margin:20px 0 10px;color:var(--ink)}
+h3{font:600 15px/1.3 var(--f-tit);margin:0 0 6px}
 .hide{display:none!important}
-.empty{text-align:center;color:var(--mute);padding:22px 10px;background:var(--card);border:1px dashed var(--line);border-radius:var(--r)}
-.falar{text-align:center}
-.mic{display:block;margin:6px auto 10px;width:104px;height:104px;border-radius:50%;font-size:44px;background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;border:0;box-shadow:0 8px 20px -8px rgba(37,99,235,.6)}
-.mic:hover{background:linear-gradient(135deg,#1d4ed8,#6d28d9)}
-.miclbl{font-weight:600;font-size:16px;margin-bottom:4px}
-.it{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:8px;display:flex;gap:10px;align-items:flex-start;box-shadow:var(--sh)}
+.empty{text-align:center;color:var(--mute);padding:20px 12px;background:var(--card);border:1px dashed var(--line3);border-radius:var(--r)}
+.falar{text-align:left}
+.mic{width:100%;justify-content:center;padding:16px;font-size:17px;font-weight:600;background:var(--acc);border-color:var(--acc);color:#fff;margin-bottom:10px}
+.mic:hover{background:var(--acc2);border-color:var(--acc2)}
+.mic svg{width:24px;height:24px}
+.it{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px;margin-bottom:8px;display:flex;gap:10px;align-items:flex-start}
 .it.feito{opacity:.55}
 .it.feito .tx{text-decoration:line-through}
-.it input[type=checkbox]{width:20px;height:20px;margin-top:2px;flex:none;accent-color:var(--acc)}
+.it input[type=checkbox]{width:20px;height:20px;margin-top:2px;flex:none}
 .it .tx{flex:1;min-width:0}
 .it .meta{color:var(--mute);font-size:12.5px;margin-top:2px}
-.badge{display:inline-flex;align-items:center;border-radius:999px;padding:2px 10px;font-size:11.5px;font-weight:600;background:#eef2f7;color:#334155;margin-right:6px;white-space:nowrap}
+.pj-cod{color:var(--mute);font-variant-numeric:tabular-nums;margin-left:6px}
+.badge{display:inline-flex;align-items:center;border-radius:var(--r-p);padding:1px 8px;font-size:12px;font-weight:600;background:var(--soft2);color:var(--ink2);margin-right:6px;white-space:nowrap}
 .b-criar{background:#dcfce7;color:#166534}
-.b-mover{background:#dbeafe;color:#1e40af}
+.b-mover{background:var(--acc-l);color:var(--acc2)}
 .b-atualizar{background:#fef3c7;color:#92400e}
-.b-comentar{background:#ede9fe;color:#5b21b6}
-.antes{color:var(--mute);font-size:12.5px;margin-top:4px;padding:4px 8px;background:var(--soft);border-radius:6px}
-.ov{position:fixed;inset:0;background:rgba(15,27,45,.6);z-index:20;display:flex;align-items:flex-end;justify-content:center}
-.ovbox{background:var(--card);width:100%;max-width:560px;border-radius:16px 16px 0 0;padding:18px 16px 24px;text-align:center}
-#ovTit{font-size:19px;font-weight:700}
-#ovTxt{min-height:110px;max-height:40vh;overflow:auto;font-size:17px;padding:10px;border:1px dashed var(--line);border-radius:9px;margin:10px 0;text-align:left;background:var(--soft)}
-.ovt{font-variant-numeric:tabular-nums;color:var(--mute);margin:6px 0}
-.ovbox .acts button{flex:1;padding:15px;font-size:16px}
-.busy{position:fixed;inset:0;background:rgba(15,27,45,.6);z-index:30;display:flex;align-items:center;justify-content:center;padding:16px}
-.busy>div{background:var(--card);border-radius:14px;padding:22px 18px;max-width:360px;text-align:center;font-size:16px;white-space:pre-line;box-shadow:var(--sh)}
-.giro{width:38px;height:38px;border:4px solid var(--line);border-top-color:var(--acc);border-radius:50%;margin:0 auto 12px;animation:giro 1s linear infinite}
+.b-comentar{background:var(--soft2);color:var(--ink2)}
+.antes{color:var(--ink2);font-size:12.5px;margin-top:6px;padding:5px 8px;background:var(--soft2);border-radius:var(--r-p)}
+.ov{position:fixed;inset:0;background:rgba(26,37,51,.55);z-index:20;display:flex;align-items:flex-end;justify-content:center}
+.ovbox{background:var(--card);width:100%;max-width:560px;border-radius:var(--r) var(--r) 0 0;padding:16px 16px 22px;box-shadow:var(--sh-flut)}
+.ovbox::before{content:"";display:block;height:4px;margin:-16px -16px 14px;border-radius:var(--r) var(--r) 0 0;background:var(--verm)}
+#ovTit{font:600 18px/1.3 var(--f-tit);color:var(--verm)}
+#ovTxt{min-height:110px;max-height:40vh;overflow:auto;font-size:17px;padding:10px;border:1px solid var(--line);border-radius:var(--r-p);margin:10px 0;background:var(--soft)}
+.ovt{font-variant-numeric:tabular-nums;color:var(--mute);margin:6px 0;font-family:var(--f-tit)}
+.ovbox .acts button{flex:1;justify-content:center;padding:14px;font-size:16px}
+.busy{position:fixed;inset:0;background:rgba(26,37,51,.55);z-index:30;display:flex;align-items:center;justify-content:center;padding:16px}
+.busy>div{background:var(--card);border-radius:var(--r);padding:20px 18px;max-width:360px;text-align:center;font-size:15px;white-space:pre-line;box-shadow:var(--sh-flut)}
+.giro{width:34px;height:34px;border:3px solid var(--line);border-top-color:var(--acc);border-radius:50%;margin:0 auto 12px;animation:giro 1s linear infinite}
 @keyframes giro{to{transform:rotate(360deg)}}
-.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--side);color:#fff;padding:8px 14px;border-radius:9px;font-size:13.5px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:40}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:8px 14px;border-radius:var(--r-p);font-size:13.5px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:40;box-shadow:var(--sh-flut)}
 .toast.show{opacity:1}
-.aviso{border-left:4px solid var(--warn);background:#fffbeb}
+.aviso{border-left:3px solid var(--ouro);background:#FFFBEB}
 #ctlTxt,#ctlAnt{min-height:220px;font:13.5px/1.45 Consolas,ui-monospace,monospace}
 details summary{cursor:pointer}
+#iaRes ul{margin:6px 0 0;padding-left:20px}
 </style>
 </head>
 <body>
 <header>
-  <div class="marca"><div class="logo">C</div><div><h1>Caderneta · Ch SecProj</h1><div class="sub" id="cab"></div></div></div>
+  <div class="marca"><h1>Caderneta do Ch SecProj</h1><div class="sub" id="cab"></div></div>
   <nav>
-    <button id="tF" class="on">🎤 Falar</button>
+    <button id="tF" class="on">Falar</button>
     <button id="tD">Caderneta</button>
     <button id="tK">Kanban</button>
     <button id="tA">Controle</button>
@@ -98,9 +110,8 @@ details summary{cursor:pointer}
       <div class="nota"><b>Só conteúdo ostensivo.</b> Nada sigiloso, nada de saúde ou dado pessoal sensível. Projeto sensível: use a designação externa.</div>
     </div>
     <div class="card falar">
-      <button id="mic" class="mic" aria-label="Gravar">🎤</button>
-      <div class="miclbl">Toque para gravar</div>
-      <div class="nota">Fale solto: “Sgt Fulano, terminar o ARQ do PNR até sexta.” · “Decidi que o SPDA fica para a fase 2.” · “DOM pediu a planilha orçamentária do quartel X.”</div>
+      <button id="mic" class="mic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>Gravar nota</button>
+            <div class="nota">Fale solto, por exemplo: “Sgt Fulano, terminar o ARQ do PNR até sexta.” · “Decidi que o SPDA fica para a fase 2.” · “DOM pediu a planilha orçamentária do quartel X.”</div>
       <details style="text-align:left;margin-top:10px"><summary class="nota">Prefere escrever?</summary>
         <textarea id="notaTxt" placeholder="Escreva a nota…"></textarea>
         <div class="acts"><button id="notaAdd">Salvar nota</button></div>
@@ -108,8 +119,8 @@ details summary{cursor:pointer}
     </div>
     <h2>Notas novas <span class="nota" id="notaCont"></span></h2>
     <div class="acts" style="margin-top:0">
-      <button class="pri" id="btnIA">✨ Organizar com IA</button>
-      <button class="mini hide" id="btnDesf">↩ Desfazer</button>
+      <button class="pri" id="btnIA">Organizar com IA</button>
+      <button class="mini hide" id="btnDesf">Desfazer</button>
     </div>
     <div id="iaRes" class="card hide" style="margin-top:10px"></div>
     <div id="notas" style="margin-top:10px"></div>
@@ -131,7 +142,7 @@ details summary{cursor:pointer}
       <h3>Propostas para o Kanban do Sistema</h3>
       <p class="nota">A IA <b>propõe</b>; nada muda no Sistema sozinho. Você exporta o lote e, no Sistema, aprova item por item (essa tela do Sistema é a próxima etapa).</p>
       <div class="acts">
-        <button class="pri" id="expLote">⬇ Exportar lote</button>
+        <button class="pri" id="expLote">Exportar lote</button>
         <button class="mini" id="limparK">Limpar exportadas</button>
       </div>
     </div>
@@ -148,7 +159,7 @@ details summary{cursor:pointer}
       </details>
       <label>Prioridade da semana (opcional)</label>
       <input type="text" id="ctlPri" placeholder="Ex.: PNR e orçamento do quartel X">
-      <div class="acts"><button class="pri" id="btnCtl">✨ Atualizar com IA</button></div>
+      <div class="acts"><button class="pri" id="btnCtl">Atualizar com IA</button></div>
     </div>
     <textarea id="ctlTxt" placeholder="A mensagem aparece aqui. Você pode editar antes de enviar."></textarea>
     <div class="acts">
@@ -165,7 +176,7 @@ details summary{cursor:pointer}
       <h3>Retrato do Sistema SecProj</h3>
       <p class="nota">Equipe, projetos e cartões abertos, para a IA reconhecer quem é quem. Use o arquivo JSON do retrato (o mesmo que o cofre lê, com projetos sensíveis pela designação externa).</p>
       <div class="acts">
-        <button class="pri" id="retBtn">📂 Carregar retrato (JSON)</button>
+        <button class="pri" id="retBtn">Carregar retrato</button>
         <input type="file" id="retF" accept=".json,application/json" class="hide">
       </div>
       <p class="nota" id="retInfo"></p>
@@ -193,20 +204,20 @@ details summary{cursor:pointer}
     </div>
     <div class="card">
       <h3>Segurança da informação</h3>
-      <p class="nota">Os dados ficam só neste celular. Ao gravar, a fala passa pelo serviço de voz do Google; ao usar “✨ IA”, as notas, a caderneta e o retrato vão para a Anthropic (Claude). Use só conteúdo ostensivo.</p>
-      <p class="nota">Versão 1 · 23/11/2026</p>
+      <p class="nota">Os dados ficam só neste celular. Ao gravar, a fala passa pelo serviço de voz do Google; ao usar a IA, as notas, a caderneta e o retrato vão para a Anthropic (Claude). Use só conteúdo ostensivo.</p>
+      <p class="nota">Versão 2, de 23/11/2026</p>
     </div>
   </section>
 </main>
 
 <div id="ov" class="ov hide" role="dialog" aria-modal="true">
   <div class="ovbox">
-    <div id="ovTit">🔴 Gravando…</div>
+    <div id="ovTit">Gravando</div>
     <div id="ovTxt"></div>
     <div class="ovt" id="ovTempo">0:00</div>
     <div class="acts">
       <button class="del" id="ovCancel">Cancelar</button>
-      <button class="pri" id="ovOk">■ Parar e salvar</button>
+      <button class="pri" id="ovOk">Parar e salvar</button>
     </div>
   </div>
 </div>
@@ -225,11 +236,12 @@ const hora = () => { const d = new Date(); return String(d.getHours()).padStart(
 const cap = t => t.charAt(0).toUpperCase() + t.slice(1);
 
 const TIPOS = {
-  tarefa: ['Tarefas da equipe', '📌'], decisao: ['Decisões', '⚖️'], pendencia: ['Pendências externas', '⏳'],
-  lembrete: ['Lembretes', '🔔'], licao: ['Lições aprendidas', '💡']
+  tarefa: ["Tarefas da equipe", ""], decisao: ["Decisões", ""], pendencia: ["Pendências externas", ""],
+  lembrete: ["Lembretes", ""], licao: ["Lições aprendidas", ""]
 };
 const STATUS = { a_fazer: 'A fazer', andamento: 'Em andamento', avaliacao: 'Em avaliação', concluido: 'Concluído' };
 const PRIOR = { baixa: 'Baixa', media: 'Média', alta: 'Alta' };
+const ACOES = { criar: "Criar cartão", atualizar: "Atualizar", mover: "Mover", comentar: "Comentar" };
 
 // ---------- estado ----------
 function novoEstado() { return { retrato: null, notas: [], itens: [], propostas: [], controle: { anterior: '', atual: '', em: '' }, gastoIA: 0 }; }
@@ -299,7 +311,7 @@ function renderNotas() {
   $('notas').innerHTML = novas.length ? novas.slice().reverse().map(n => `
     <div class="it" data-nid="${n.id}">
       <div class="tx"><div class="meta">${ddmm(n.d)} ${n.h}</div><textarea data-nt="1" style="min-height:54px">${esc(n.t)}</textarea></div>
-      <button class="mini del" data-nrm="1">✕</button>
+      <button class="mini del" data-nrm="1">Apagar</button>
     </div>`).join('') : '<div class="empty">Nenhuma nota nova. Toque no microfone e fale.</div>';
   cabecalho();
 }
@@ -317,7 +329,7 @@ function abrirGravacao() {
   $('ovOk').classList.remove('hide'); $('ovCancel').textContent = 'Cancelar'; $('ov').classList.remove('hide');
   if (!SR) { ovErro('Este navegador não grava voz. Abra a Caderneta pelo Google Chrome.'); return; }
   falaF = ''; falaP = ''; cancelado = false; finalizado = false; gravando = true;
-  $('ovTit').textContent = '🔴 Gravando…'; $('ovTxt').textContent = 'Pode falar…';
+  $("ovTit").textContent = "Gravando"; $('ovTxt').textContent = 'Pode falar…';
   t0 = Date.now(); $('ovTempo').textContent = '0:00'; clearInterval(tick);
   tick = setInterval(() => { const s = Math.floor((Date.now() - t0) / 1000); $('ovTempo').textContent = Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); }, 500);
   try { ligarRec(); } catch (e) { ovErro('Não consegui ligar o microfone.'); }
@@ -440,7 +452,7 @@ $('btnIA').onclick = async () => {
   const notas = S.notas.filter(n => !n.ok && n.t.trim());
   if (!notas.length) { toast('Nenhuma nota nova'); return; }
   if (!lerChave()) { alert('Cole a chave da API em Ajustes → Inteligência artificial.'); aba('C'); return; }
-  ocupado('✨ A IA está organizando ' + notas.length + ' nota(s)…\nPode levar até um minuto.');
+  ocupado('A IA está organizando ' + notas.length + ' nota(s)…\nPode levar até um minuto.');
   try {
     const user = 'Hoje: ' + hojeISO() + ' (' + ['domingo', 'segunda', 'terça', 'quarta', 'quinta', 'sexta', 'sábado'][new Date().getDay()] + ')\n\n' +
       'RETRATO DO SISTEMA (JSON):\n' + JSON.stringify(retratoResumo() || 'sem retrato carregado') +
@@ -456,9 +468,9 @@ $('btnIA').onclick = async () => {
     notas.forEach(n => { if (!duvIds.has(n.id)) n.ok = true; });
     salvar(); renderNotas();
     const cont = t => (r.itens || []).filter(i => i.tipo === t).length;
-    $('iaRes').innerHTML = '<h3>✨ Organizado</h3><div class="nota">' +
-      Object.keys(TIPOS).map(t => cont(t) ? TIPOS[t][1] + ' ' + cont(t) + ' ' + TIPOS[t][0].toLowerCase() : '').filter(Boolean).join(' · ') +
-      ((r.propostas_kanban || []).length ? '<br>🗂 ' + r.propostas_kanban.length + ' proposta(s) para o Kanban' : '') + '</div>' +
+    $('iaRes').innerHTML = '<h3>Organizado</h3><div class="nota">' +
+      Object.keys(TIPOS).map(t => cont(t) ? cont(t) + ' ' + TIPOS[t][0].toLowerCase() : '').filter(Boolean).join(' · ') +
+      ((r.propostas_kanban || []).length ? "<br>" + r.propostas_kanban.length + ' proposta(s) para o Kanban' : '') + '</div>' +
       (duvidas.length ? '<div class="nota" style="margin-top:6px">Não entendi (a nota continua aqui para você corrigir e organizar de novo):</div><ul>' + duvidas.map(x => '<li>' + esc(x) + '</li>').join('') + '</ul>' : '');
     $('iaRes').classList.remove('hide'); $('btnDesf').classList.remove('hide');
   } catch (e) { alert(e.message || String(e)); }
@@ -477,13 +489,13 @@ function renderCad() {
   for (const [t, [nome, ic]] of Object.entries(TIPOS)) {
     const its = S.itens.filter(i => i.tipo === t && (ver || !i.feito));
     if (!its.length) continue;
-    html += `<h2>${ic} ${nome} <span class="nota">(${its.length})</span></h2>`;
+    html += `<h2>${nome} <span class="nota">(${its.length})</span></h2>`;
     html += its.slice().reverse().map(i => `
       <div class="it ${i.feito ? 'feito' : ''}" data-iid="${i.id}">
         <input type="checkbox" data-ifeito="1" ${i.feito ? 'checked' : ''} title="Concluído">
         <div class="tx"><div>${esc(i.texto)}</div>
           <div class="meta">${[i.pessoa, i.projeto, i.prazo ? 'até ' + ddmm(i.prazo) : '', 'anotado ' + ddmm(i.data)].filter(Boolean).map(esc).join(' · ')}</div></div>
-        <button class="mini del" data-irm="1">✕</button>
+        <button class="mini del" data-irm="1">Apagar</button>
       </div>`).join('');
   }
   $('cad').innerHTML = html || '<div class="empty">A caderneta está vazia. Grave notas e toque em “Organizar com IA”.</div>';
@@ -516,10 +528,10 @@ function renderProps() {
   const ps = S.propostas.filter(p => p.estado !== 'descartada');
   $('props').innerHTML = ps.length ? ps.slice().reverse().map(p => {
     const c = acharCartao(p.projeto, p.codigo);
-    const antes = c ? `<div class="antes">Hoje no Sistema: ${esc(c.situacao)} · ${esc(c.responsavel || 'sem responsável')}${c.prazo ? ' · prazo ' + ddmm(c.prazo) : ''}</div>` : (p.acao !== 'criar' ? '<div class="antes">⚠ Cartão não encontrado no retrato carregado</div>' : '');
+    const antes = c ? `<div class="antes">Hoje no Sistema: ${esc(c.situacao)} · ${esc(c.responsavel || 'sem responsável')}${c.prazo ? ' · prazo ' + ddmm(c.prazo) : ''}</div>` : (p.acao !== 'criar' ? '<div class="antes">Cartão não encontrado no retrato carregado</div>' : '');
     return `<div class="it" data-pid="${p.id}" style="${p.estado === 'exportada' ? 'opacity:.6' : ''}">
       <div class="tx">
-        <div><span class="badge b-${p.acao}">${p.acao}</span><b>${esc(p.projeto || 'Seção')}</b>${p.codigo ? ' · #' + esc(p.codigo) : ''}${p.estado === 'exportada' ? ' <span class="badge">exportada</span>' : ''}</div>
+        <div><span class="badge b-${p.acao}">${ACOES[p.acao] || p.acao}</span><b>${esc(p.projeto || 'Seção')}</b>${p.codigo ? "<span class=\"pj-cod\">" + esc(p.codigo) + "</span>" : ""}${p.estado === 'exportada' ? ' <span class="badge">exportada</span>' : ''}</div>
         <div>${esc(descrProposta(p))}</div>${antes}
         <div class="meta">${esc(p.motivo)}</div>
       </div>
@@ -567,7 +579,7 @@ Regras:
 $('btnCtl').onclick = async () => {
   if (!lerChave()) { alert('Cole a chave da API em Ajustes → Inteligência artificial.'); aba('C'); return; }
   S.controle.anterior = $('ctlAnt').value; salvar();
-  ocupado('✨ A IA está atualizando o Controle de Atividades…');
+  ocupado("A IA está atualizando o Controle de Atividades…");
   try {
     const user = 'Hoje: ' + hojeISO() + '\nPrioridade informada: ' + ($('ctlPri').value.trim() || '(manter)') +
       '\n\nVERSÃO ANTERIOR:\n' + (S.controle.anterior.trim() || '(não há)') +
@@ -603,7 +615,7 @@ $('chaveSalvar').onclick = () => {
 $('chaveApagar').onclick = () => { if (confirm('Apagar a chave deste celular?')) { try { localStorage.removeItem(CHAVE_KEY); } catch (e) {} cli = null; mostrarGasto(); } };
 $('chaveTestar').onclick = async () => {
   ocupado('Testando a chave…');
-  try { const t = await chamarIA({ system: 'Responda só com a palavra OK.', user: 'Teste.', maxTokens: 2000 }); alert('Chave funcionando ✔ (' + t.slice(0, 20) + ')'); }
+  try { const t = await chamarIA({ system: 'Responda só com a palavra OK.', user: 'Teste.', maxTokens: 2000 }); alert('Chave funcionando. Resposta da IA: ' + t.slice(0, 20)); }
   catch (e) { alert(e.message || String(e)); } finally { livre(); }
 };
 $('exp').onclick = () => {
